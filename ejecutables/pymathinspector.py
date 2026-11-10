@@ -15,11 +15,6 @@ from sympy.parsing.sympy_parser import (
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-
-# ==========================================
-# CONFIGURACION MATEMATICA
-# ==========================================
-
 x = sp.symbols("x")
 
 # Permite escribir:
@@ -31,7 +26,6 @@ transformaciones = standard_transformations + (
     implicit_multiplication_application,
     convert_xor
 )
-
 
 # ==========================================
 # FUNCION PARA ANALIZAR
@@ -50,19 +44,23 @@ def analizar():
 
     try:
 
-        # Interpretar la expresión ingresada
+        # Interpretar la expresion ingresada
         funcion = parse_expr(
             expresion,
             local_dict={"x": x},
             transformations=transformaciones
         )
 
-        # Comprobar que sea una expresión polinómica
+        # Validar que no existan variables desconocidas
+        if funcion.free_symbols - {x}:
+            raise ValueError("Entrada no válida")
+
+        # Comprobar que sea una expresion polinomica
         polinomio = sp.Poly(funcion, x)
 
         grado = polinomio.degree()
 
-        # Identificar tipo de función
+        # Identificar tipo de funcion
         if grado == 0:
             tipo = "Función constante"
 
@@ -78,10 +76,10 @@ def analizar():
         else:
             tipo = f"Función polinómica de grado {grado}"
 
-        # Calcular raíces
+        # Calcular raices
         raices = sp.solve(funcion, x)
 
-        # Calcular intersección con eje Y
+        # Calcular interseccion con eje Y
         interseccion_y = funcion.subs(x, 0)
 
         # Preparar resultados
@@ -93,7 +91,7 @@ def analizar():
             f"Intersección eje Y: {interseccion_y}\n"
         )
 
-        # Calcular vértice si es cuadrática
+        # Calcular vertice si es cuadratica
         if grado == 2:
 
             a, b, c = polinomio.all_coeffs()
@@ -117,18 +115,20 @@ def analizar():
         texto_resultados.insert(tk.END, resultado)
         texto_resultados.config(state="disabled")
 
-        # Generar gráfico
+        # Generar grafico
         graficar(funcion)
 
     except Exception:
 
         messagebox.showerror(
-            "Error",
-            "No se pudo analizar la expresión.\n\n"
-            "Por ahora se admiten funciones polinómicas.\n\n"
-            "Ejemplo: 2x^2 + 3x + 1"
+            "Entrada no válida",
+            "Solo podemos ingresar expresiones "
+            "matemáticas válidas.\n\n"
+            "Ejemplos:\n"
+            "2x + 3\n"
+            "x^2 + 2x - 3\n"
+            "3x^3 + 2x + 1"
         )
-
 
 # ==========================================
 # FUNCION PARA GRAFICAR
@@ -143,7 +143,7 @@ def graficar(funcion):
     # Generar valores para el eje X
     valores_x = np.linspace(-10, 10, 300)
 
-    # Convertir expresión matemática a función numérica
+    # Convertir expresion matematica a funcion numerica
     funcion_numerica = sp.lambdify(
         x,
         funcion,
@@ -152,7 +152,7 @@ def graficar(funcion):
 
     valores_y = funcion_numerica(valores_x)
 
-    # Dibujar función
+    # Dibujar funcion
     eje.plot(
         valores_x,
         valores_y,
@@ -175,7 +175,6 @@ def graficar(funcion):
 
     canvas.draw()
 
-
 # ==========================================
 # FUNCION PARA LIMPIAR
 # ==========================================
@@ -190,7 +189,6 @@ def limpiar():
 
     figura.clear()
     canvas.draw()
-
 
 # ==========================================
 # VENTANA PRINCIPAL
