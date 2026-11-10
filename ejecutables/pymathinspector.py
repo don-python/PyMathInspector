@@ -1,6 +1,7 @@
 
 import tkinter as tk
 from tkinter import ttk, messagebox
+from pathlib import Path
 
 import sympy as sp
 import numpy as np
@@ -14,6 +15,7 @@ from sympy.parsing.sympy_parser import (
 )
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from PIL import Image, ImageTk
 
 
 # ==========================================
@@ -197,6 +199,8 @@ def limpiar():
 # ==========================================
 
 ventana = tk.Tk()
+icono = tk.PhotoImage(file=Path(__file__).with_name("logo.png"))
+ventana.iconphoto(True, icono)
 
 ventana.title("PyMathInspector")
 
