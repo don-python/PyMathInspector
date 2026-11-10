@@ -74,10 +74,8 @@ def analizar():
             tipo = "Función cúbica (tercer grado)"
 
         else:
-            tipo = f"Función polinómica de grado {grado}"
+            raise ValueError("Solo se permiten funciones de grado 1, 2 y 3")
 
-        # Calcular raices
-        raices = sp.solve(funcion, x)
 
         # Calcular interseccion con eje Y
         interseccion_y = funcion.subs(x, 0)
@@ -87,7 +85,6 @@ def analizar():
             f"Función: {sp.expand(funcion)}\n"
             f"Tipo: {tipo}\n"
             f"Grado: {grado}\n"
-            f"Raíces: {raices}\n"
             f"Intersección eje Y: {interseccion_y}\n"
         )
 
@@ -127,7 +124,8 @@ def analizar():
             "Ejemplos:\n"
             "2x + 3\n"
             "x^2 + 2x - 3\n"
-            "3x^3 + 2x + 1"
+            "3x^3 + 2x + 1\n"
+            "polinomicas hasta grado 3"
         )
 
 # ==========================================
@@ -151,6 +149,16 @@ def graficar(funcion):
     )
 
     valores_y = funcion_numerica(valores_x)
+    valores_y = funcion_numerica(valores_x)
+
+    # Si la función es constante, generar valores
+    # para todos los puntos del eje X
+    if np.isscalar(valores_y):
+        valores_y = np.full_like(
+            valores_x,
+            valores_y,
+            dtype=float
+        )
 
     # Dibujar funcion
     eje.plot(
