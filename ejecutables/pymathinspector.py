@@ -1,4 +1,8 @@
 
+import ctypes
+from pathlib import Path
+import sys
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 
@@ -14,6 +18,16 @@ from sympy.parsing.sympy_parser import (
 )
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+if sys.platform == "win32":
+    resultado_app_id = ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+        "don-python.PyMathInspector"
+    )
+    if resultado_app_id != 0:
+        raise OSError(
+            f"No se pudo configurar el identificador de la aplicación "
+            f"(HRESULT 0x{resultado_app_id & 0xFFFFFFFF:08X})."
+        )
 
 x = sp.symbols("x")
 
@@ -205,6 +219,11 @@ def limpiar():
 ventana = tk.Tk()
 
 ventana.title("PyMathInspector")
+
+ruta_iconos = Path(__file__).resolve().parent
+icono = tk.PhotoImage(file=str(ruta_iconos / "icono_pymathinspector.png"))
+ventana.iconphoto(True, icono)
+ventana.iconbitmap(str(ruta_iconos / "icono_pymathinspector.ico"))
 
 ventana.geometry("900x650")
 
