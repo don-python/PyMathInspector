@@ -12,7 +12,7 @@ from sympy.parsing.sympy_parser import (
     implicit_multiplication_application,
     convert_xor
 )
-
+# hola 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 x = sp.symbols("x")
