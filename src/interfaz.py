@@ -7,14 +7,14 @@ from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from ejecutables.analizador import analizar_expresion
-from ejecutables.graficador import graficar, limpiar_grafico
+from src.analizador import analizar_expresion
+from src.graficador import graficar, limpiar_grafico
 
 
 class PyMathInspectorApp:
     def __init__(self, ventana):
         self.ventana = ventana
-        self.ruta = Path(__file__).resolve().parent.parent / "src"
+        self.ruta = Path(__file__).resolve().parent.parent / "assets"
 
         self.configurar_ventana()
         self.crear_interfaz()

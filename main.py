@@ -1,4 +1,4 @@
-from ejecutables.interfaz import iniciar_aplicacion
+from src.interfaz import iniciar_aplicacion
 
 
 if __name__ == "__main__":

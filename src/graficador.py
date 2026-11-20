@@ -1,7 +1,7 @@
 import numpy as np
 import sympy as sp
 
-from ejecutables.analizador import x
+from src.analizador import x
 
 def graficar(funcion, figura, canvas):
     """Dibuja una función en el lienzo de Matplotlib integrado en Tkinter."""
