@@ -13,6 +13,7 @@ PyMathInspector es una herramienta educativa desarrollada en Python que permite 
 - 📊 **Representación gráfica:** genera gráficos de las funciones ingresadas.
 - 📍 **Cálculo del vértice:** obtiene el vértice y la concavidad de funciones cuadráticas.
 - ⌨️ **Ingreso simplificado:** permite escribir expresiones como `2x^2 + 3x + 1`, sin necesidad de utilizar `*` para multiplicar.
+- 📝 **Historial:** guarda cada análisis válido, con fecha, expresión y resultados, en `historial.txt` junto al programa.
 
 ## 🛠️ Tecnologías
 
@@ -35,7 +36,7 @@ git clone URL_DEL_REPOSITORIO
 **2. Instalar las dependencias**
 
 ```bash
-pip install sympy numpy matplotlib
+pip install sympy numpy matplotlib tkinter
 ```
 
 **3. Ejecutar el programa**
@@ -52,7 +53,6 @@ Puedes ingresar expresiones como las siguientes:
 2x + 3
 x^2 + 2x - 3
 2x^3 + 2x^2 + 2x + 1
-x^4 - 5x^2
 ```
 
 PyMathInspector analizará la expresión, identificará el tipo de función y mostrará sus características junto con su gráfico.

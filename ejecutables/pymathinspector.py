@@ -1,4 +1,9 @@
 
+import ctypes
+from datetime import datetime
+from pathlib import Path
+import sys
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 from pathlib import Path
@@ -17,10 +22,15 @@ from sympy.parsing.sympy_parser import (
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PIL import Image, ImageTk
 
-
-# ==========================================
-# CONFIGURACION MATEMATICA
-# ==========================================
+if sys.platform == "win32":
+    resultado_app_id = ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+        "don-python.PyMathInspector"
+    )
+    if resultado_app_id != 0:
+        raise OSError(
+            f"No se pudo configurar el identificador de la aplicación "
+            f"(HRESULT 0x{resultado_app_id & 0xFFFFFFFF:08X})."
+        )
 
 x = sp.symbols("x")
 
@@ -33,6 +43,25 @@ transformaciones = standard_transformations + (
     implicit_multiplication_application,
     convert_xor
 )
+
+
+def guardar_historial(expresion, resultado):
+    ruta_historial = Path(__file__).resolve().with_name("historial.txt")
+    fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    try:
+        with ruta_historial.open("a", encoding="utf-8") as archivo:
+            archivo.write(
+                f"Fecha y hora: {fecha_hora}\n"
+                f"Expresión ingresada: {expresion}\n"
+                f"{resultado}"
+                "----------------------------------------\n"
+            )
+    except OSError as error:
+        messagebox.showerror(
+            "Error al guardar el historial",
+            f"No se pudo guardar el análisis en {ruta_historial}.\n\n{error}"
+        )
 
 
 # ==========================================
@@ -52,19 +81,23 @@ def analizar():
 
     try:
 
-        # Interpretar la expresión ingresada
+        # Interpretar la expresion ingresada
         funcion = parse_expr(
             expresion,
             local_dict={"x": x},
             transformations=transformaciones
         )
 
-        # Comprobar que sea una expresión polinómica
+        # Validar que no existan variables desconocidas
+        if funcion.free_symbols - {x}:
+            raise ValueError("Entrada no válida")
+
+        # Comprobar que sea una expresion polinomica
         polinomio = sp.Poly(funcion, x)
 
         grado = polinomio.degree()
 
-        # Identificar tipo de función
+        # Identificar tipo de funcion
         if grado == 0:
             tipo = "Función constante"
 
@@ -78,12 +111,10 @@ def analizar():
             tipo = "Función cúbica (tercer grado)"
 
         else:
-            tipo = f"Función polinómica de grado {grado}"
+            raise ValueError("Solo se permiten funciones de grado 1, 2 y 3")
 
-        # Calcular raíces
-        raices = sp.solve(funcion, x)
 
-        # Calcular intersección con eje Y
+        # Calcular interseccion con eje Y
         interseccion_y = funcion.subs(x, 0)
 
         # Preparar resultados
@@ -91,11 +122,10 @@ def analizar():
             f"Función: {sp.expand(funcion)}\n"
             f"Tipo: {tipo}\n"
             f"Grado: {grado}\n"
-            f"Raíces: {raices}\n"
             f"Intersección eje Y: {interseccion_y}\n"
         )
 
-        # Calcular vértice si es cuadrática
+        # Calcular vertice si es cuadratica
         if grado == 2:
 
             a, b, c = polinomio.all_coeffs()
@@ -113,24 +143,29 @@ def analizar():
             else:
                 resultado += "Concavidad: Hacia abajo\n"
 
+        guardar_historial(expresion, resultado)
+
         # Mostrar resultados en pantalla
         texto_resultados.config(state="normal")
         texto_resultados.delete("1.0", tk.END)
         texto_resultados.insert(tk.END, resultado)
         texto_resultados.config(state="disabled")
 
-        # Generar gráfico
+        # Generar grafico
         graficar(funcion)
 
     except Exception:
 
         messagebox.showerror(
-            "Error",
-            "No se pudo analizar la expresión.\n\n"
-            "Por ahora se admiten funciones polinómicas.\n\n"
-            "Ejemplo: 2x^2 + 3x + 1"
+            "Entrada no válida",
+            "Solo podemos ingresar expresiones "
+            "matemáticas válidas.\n\n"
+            "Ejemplos:\n"
+            "2x + 3\n"
+            "x^2 + 2x - 3\n"
+            "3x^3 + 2x + 1\n"
+            "polinomicas hasta grado 3"
         )
-
 
 # ==========================================
 # FUNCION PARA GRAFICAR
@@ -145,7 +180,7 @@ def graficar(funcion):
     # Generar valores para el eje X
     valores_x = np.linspace(-10, 10, 300)
 
-    # Convertir expresión matemática a función numérica
+    # Convertir expresion matematica a funcion numerica
     funcion_numerica = sp.lambdify(
         x,
         funcion,
@@ -153,8 +188,18 @@ def graficar(funcion):
     )
 
     valores_y = funcion_numerica(valores_x)
+    valores_y = funcion_numerica(valores_x)
 
-    # Dibujar función
+    # Si la función es constante, generar valores
+    # para todos los puntos del eje X
+    if np.isscalar(valores_y):
+        valores_y = np.full_like(
+            valores_x,
+            valores_y,
+            dtype=float
+        )
+
+    # Dibujar funcion
     eje.plot(
         valores_x,
         valores_y,
@@ -177,7 +222,6 @@ def graficar(funcion):
 
     canvas.draw()
 
-
 # ==========================================
 # FUNCION PARA LIMPIAR
 # ==========================================
@@ -193,7 +237,6 @@ def limpiar():
     figura.clear()
     canvas.draw()
 
-
 # ==========================================
 # VENTANA PRINCIPAL
 # ==========================================
@@ -203,6 +246,11 @@ icono = tk.PhotoImage(file=Path(__file__).with_name("logo.png"))
 ventana.iconphoto(True, icono)
 
 ventana.title("PyMathInspector")
+
+ruta_iconos = Path(__file__).resolve().parent
+icono = tk.PhotoImage(file=str(ruta_iconos / "icono_pymathinspector.png"))
+ventana.iconphoto(True, icono)
+ventana.iconbitmap(str(ruta_iconos / "icono_pymathinspector.ico"))
 
 ventana.geometry("900x650")
 
