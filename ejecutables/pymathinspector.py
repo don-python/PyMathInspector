@@ -1,5 +1,6 @@
 
 import ctypes
+from datetime import datetime
 from pathlib import Path
 import sys
 
@@ -40,6 +41,26 @@ transformaciones = standard_transformations + (
     implicit_multiplication_application,
     convert_xor
 )
+
+
+def guardar_historial(expresion, resultado):
+    ruta_historial = Path(__file__).resolve().with_name("historial.txt")
+    fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    try:
+        with ruta_historial.open("a", encoding="utf-8") as archivo:
+            archivo.write(
+                f"Fecha y hora: {fecha_hora}\n"
+                f"Expresión ingresada: {expresion}\n"
+                f"{resultado}"
+                "----------------------------------------\n"
+            )
+    except OSError as error:
+        messagebox.showerror(
+            "Error al guardar el historial",
+            f"No se pudo guardar el análisis en {ruta_historial}.\n\n{error}"
+        )
+
 
 # ==========================================
 # FUNCION PARA ANALIZAR
@@ -119,6 +140,8 @@ def analizar():
                 resultado += "Concavidad: Hacia arriba\n"
             else:
                 resultado += "Concavidad: Hacia abajo\n"
+
+        guardar_historial(expresion, resultado)
 
         # Mostrar resultados en pantalla
         texto_resultados.config(state="normal")
