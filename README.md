@@ -13,7 +13,7 @@ PyMathInspector es una herramienta educativa desarrollada en Python que permite 
 - 📊 **Representación gráfica:** genera gráficos de las funciones ingresadas.
 - 📍 **Cálculo del vértice:** obtiene el vértice y la concavidad de funciones cuadráticas.
 - ⌨️ **Ingreso simplificado:** permite escribir expresiones como `2x^2 + 3x + 1`, sin necesidad de utilizar `*` para multiplicar.
-- 📝 **Historial:** guarda cada análisis válido, con fecha, expresión y resultados, en `historial.txt` junto al programa.
+- 📝 **Historial:** guarda cada análisis válido, con fecha, expresión y resultados, en `assets/historial.txt`.
 
 ## 🛠️ Tecnologías
 
@@ -30,19 +30,19 @@ PyMathInspector es una herramienta educativa desarrollada en Python que permite 
 **1. Clonar el repositorio**
 
 ```bash
-git clone URL_DEL_REPOSITORIO
+git clone https://github.com/don-python/PyMathInspector.git
 ```
 
 **2. Instalar las dependencias**
 
 ```bash
-pip install sympy numpy matplotlib tkinter
+pip install -r requirements.txt
 ```
 
 **3. Ejecutar el programa**
 
 ```bash
-python pymathinspector.py
+python main.py
 ```
 
 ## 💡 Ejemplos de uso
@@ -50,9 +50,10 @@ python pymathinspector.py
 Puedes ingresar expresiones como las siguientes:
 
 ```python
-2x + 3
-x^2 + 2x - 3
-2x^3 + 2x^2 + 2x + 1
+Constantes: x.
+Polinómicas: grado 0, 1, 2 y 3.
+Exponenciales: 2^x o exp(x).
+Logarítmicas: log(x) o ln(x).
 ```
 
 PyMathInspector analizará la expresión, identificará el tipo de función y mostrará sus características junto con su gráfico.
@@ -61,7 +62,7 @@ PyMathInspector analizará la expresión, identificará el tipo de función y mo
 
 <sub>EN DESARROLLO</sub>
 
-La versión actual se enfoca en funciones polinómicas. Se contempla ampliar progresivamente sus capacidades para incorporar funciones exponenciales, logarítmicas y trigonométricas.
+La versión actual se enfoca en funciones polinómicas, exponenciales y logarítmicas.
 
 ## 🎯 Propósito
 
