@@ -9,6 +9,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from src.analizador import analizar_expresion
 from src.graficador import graficar, limpiar_grafico
+from src.historial import guardar_historial
 
 
 class PyMathInspectorApp:
@@ -142,6 +143,19 @@ class PyMathInspectorApp:
 
         try:
             analisis = analizar_expresion(expresion)
+            try:
+                guardar_historial(
+                    expresion,
+                    analisis["resultado"],
+                    self.ruta / "historial.txt",
+                )
+            except OSError as error:
+                messagebox.showerror(
+                    "Error al guardar el historial",
+                    "No se pudo guardar el análisis en "
+                    f"{self.ruta / 'historial.txt'}.\n\n{error}",
+                )
+
             graficar(
                 analisis["funcion"],
                 self.figura,

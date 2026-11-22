@@ -1,0 +1,28 @@
+Fecha y hora: 2026-11-21 03:37:05
+Expresión ingresada: 2x^2 + 2x + 1
+Función: 2*x**2 + 2*x + 1
+Tipo: Función cuadrática (segundo grado)
+Grado: 2
+Intersección eje Y: 1
+Vértice: (-1/2, 1/2)
+Concavidad: Hacia arriba
+----------------------------------------
+Fecha y hora: 2026-11-21 03:37:13
+Expresión ingresada: 2x^2 + 2x + 1
+Función: 2*x**2 + 2*x + 1
+Tipo: Función cuadrática (segundo grado)
+Grado: 2
+Intersección eje Y: 1
+Vértice: (-1/2, 1/2)
+Concavidad: Hacia arriba
+----------------------------------------
+Fecha y hora: 2026-11-22 03:59:11
+Expresión ingresada: 2x^2 + 2x + 1
+Función: 2*x**2 + 2*x + 1
+Tipo: Función cuadrática (segundo grado)
+Familia: Polinómica
+Grado: 2
+Intersección con eje Y: (0, 1)
+Vértice: (-1/2, 1/2)
+Concavidad: Hacia arriba
+----------------------------------------
